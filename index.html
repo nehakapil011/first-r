@@ -1,1 +1,176 @@
-<p>hello</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anime Manga Hub</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #111;
+      color: #fff;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e1e1e;
+      padding: 1rem 2rem;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      color: #ff4081;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #fff;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links li a:hover {
+      color: #ff4081;
+    }
+
+    .slideshow {
+      position: relative;
+      max-width: 100%;
+      height: 400px;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 1rem;
+      border-radius: 10px;
+      font-size: 1.2rem;
+    }
+
+    #community, #manga, #contact {
+      padding: 3rem 2rem;
+      background: #181818;
+      margin-top: 20px;
+    }
+
+    footer {
+      background: #1e1e1e;
+      text-align: center;
+      padding: 1rem;
+      color: #bbb;
+    }
+
+    #manga-container div {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <h1 class="logo">MangaVerse</h1>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#manga">Manga</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="home" class="slideshow">
+    <div class="slide fade">
+      <img src="first-r/images/itachiii.jpg" alt="Manga Slide 1">
+      <div class="caption">Explore Epic Manga Worlds</div>
+    </div>
+    <div class="slide fade">
+      <img src="first-r/images/lufyyyy.jpg" alt="Manga Slide 2">
+      <div class="caption">Read, Share & Connect</div>
+    </div>
+    <div class="slide fade">
+      <img src="first-r/images/tanjirooo.jpg" alt="Manga Slide 3">
+      <div class="caption">Your Favorite Manga In One Place</div>
+    </div>
+  </section>
+
+  <section id="manga">
+    <h2>Read Manga</h2>
+    <div id="manga-container"></div>
+  </section>
+
+  <section id="community">
+    <h2>Join the Community</h2>
+    <p>Connect with other manga lovers, post reviews, and participate in discussions.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Email us at: <a href="mailto:support@mangaverse.com">support@mangaverse.com</a></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 MangaVerse</p>
+  </footer>
+
+  <script>
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+      let slides = document.querySelectorAll('.slide');
+      slides.forEach(slide => (slide.style.display = 'none'));
+      slideIndex++;
+      if (slideIndex > slides.length) slideIndex = 1;
+      slides[slideIndex - 1].style.display = 'block';
+      setTimeout(showSlides, 3000);
+    }
+
+    async function fetchManga() {
+      try {
+        const response = await fetch('https://api.jikan.moe/v4/manga?q=naruto&limit=6');
+        const data = await response.json();
+        const container = document.getElementById('manga-container');
+        container.innerHTML = '';
+
+        data.data.forEach(manga => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <img src="${manga.images.jpg.image_url}" alt="${manga.title}" width="150">
+            <h4>${manga.title}</h4>
+            <p>${manga.synopsis.slice(0, 100)}...</p>
+          `;
+          container.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Failed to fetch manga:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchManga);
+  </script>
+</body>
+</html>
